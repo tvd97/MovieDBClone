@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="m"
+            type="com.example.moviejava.data.local.entities.MovieEntity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_favorite"
+            url="@{m.posterPath}"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:paddingStart="10dp"
+            android:id="@+id/title_favorite"
+            android:layout_width="70dp"
+            android:layout_height="20dp"
+            android:text="Title:"
+            app:layout_constraintStart_toEndOf="@+id/img_favorite"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="@{m.title}"
+            app:layout_constraintStart_toEndOf="@+id/title_favorite"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:paddingStart="10dp"
+            android:id="@+id/rate_favorite"
+            android:layout_width="70dp"
+            android:layout_height="20dp"
+            android:text="Rate:"
+            app:layout_constraintBottom_toTopOf="@+id/release_favorite"
+            app:layout_constraintStart_toEndOf="@+id/img_favorite"
+            app:layout_constraintTop_toBottomOf="@+id/title_favorite" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="@{String.valueOf(m.rate)}"
+            app:layout_constraintBottom_toTopOf="@+id/release_favorite"
+            app:layout_constraintStart_toEndOf="@+id/rate_favorite"
+            app:layout_constraintTop_toBottomOf="@+id/title_favorite" />
+
+        <TextView
+            android:paddingStart="10dp"
+            android:id="@+id/release_favorite"
+            android:layout_width="70dp"
+            android:layout_height="20dp"
+            android:text="Release:"
+            app:layout_constraintBottom_toTopOf="@+id/adult_favorite"
+            app:layout_constraintStart_toEndOf="@+id/img_favorite"
+            app:layout_constraintTop_toBottomOf="@+id/rate_favorite" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="@{m.releaseDate}"
+            app:layout_constraintBottom_toTopOf="@+id/adult_favorite"
+            app:layout_constraintStart_toEndOf="@+id/release_favorite"
+            app:layout_constraintTop_toBottomOf="@+id/rate_favorite" />
+
+        <TextView
+            android:paddingStart="10dp"
+            android:id="@+id/adult_favorite"
+            android:layout_width="70dp"
+            android:layout_height="20dp"
+            android:text="18+:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img_favorite" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="@{String.valueOf(m.adult)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/adult_favorite" />
+        <ImageButton
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete_favorite"
+            android:src="@drawable/ic_baseline_delete_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

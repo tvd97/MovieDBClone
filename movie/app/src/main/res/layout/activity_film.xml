@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.film.FilmActivity">
+
+    <data>
+
+        <variable
+            name="f"
+            type="com.example.movie.model.film.Film" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.Toolbar
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/toolbar"
+            android:theme="?attr/actionBarTheme"
+            app:menu="@menu/menu"
+            app:title="@{f.title}"
+            app:titleTextColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"/>
+<!--        <ImageButton-->
+<!--            android:paddingLeft="10dp"-->
+<!--            android:background="@color/white"-->
+<!--            android:id="@+id/back_btn"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            android:src="@drawable/ic_baseline_arrow_back_24"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="?attr/actionBarSize"/>-->
+
+<!--        <TextView-->
+<!--            android:textAlignment="center"-->
+<!--            android:gravity="center"-->
+<!--            android:textSize="30sp"-->
+<!--            android:id="@+id/tile_film"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/back_btn"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            android:text="@{f.title}"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="?attr/actionBarSize"/>-->
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:id="@+id/ctn_video"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            <fragment
+                android:id="@+id/youtube_fragment"
+                android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ctn_video">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:id="@+id/container_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/overview"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="Overview"
+                        android:textFontWeight="@integer/material_motion_duration_medium_1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/overview_film"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="@{f.overview}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/overview" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/container_companies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/container_title"
+                    tools:ignore="RtlSymmetry">
+
+                    <TextView
+                        android:id="@+id/companies"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:text="Companies :"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:paddingStart="10dp"
+                        android:id="@+id/rcv_companies"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/companies"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:listitem="@layout/item_companies"
+                        tools:ignore="RtlSymmetry" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/container_genres"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/container_companies"
+                    tools:ignore="RtlSymmetry">
+
+                    <TextView
+                        android:id="@+id/genres"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:text="Genres:"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcv_genres"
+                        android:paddingLeft="10dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/genres"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:listitem="@layout/item_genres" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/container_countries"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:paddingStart="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/container_genres"
+                    tools:ignore="RtlSymmetry">
+
+                    <TextView
+                        android:id="@+id/countries"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:text="Country:"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:paddingLeft="10dp"
+                        android:id="@+id/rcv_countries"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/countries"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:listitem="@layout/item_country" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:paddingStart="10dp"
+                    android:id="@+id/ln_title"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/container_countries"
+                    tools:ignore="RtlSymmetry">
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Language" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tagline" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Status" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rate" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rate Count" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:paddingStart="10dp"
+                    android:id="@+id/ln_content"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/ln_title"
+                    app:layout_constraintTop_toBottomOf="@+id/container_countries"
+                    tools:ignore="RtlSymmetry">
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text='@{f.runtime.toString() +" " + @string/min}' />
+
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{f.spokenLanguages[1].name}" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{f.tagline}" />
+
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{f.status}" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{f.voteAverage.toString()}" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{f.voteCount.toString()}" />
+
+                </LinearLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/ctn_cast"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ln_content"
+                    android:layout_height="250dp">
+                    <TextView
+                        android:id="@+id/cast"
+                        android:layout_marginHorizontal="10dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:text="Cast :"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:paddingStart="10dp"
+                        tools:listitem="@layout/item_cast"
+                        android:id="@+id/rcv_cast"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cast"
+                        app:layout_constraintStart_toEndOf="@+id/cast"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        tools:ignore="RtlSymmetry" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/ctn_crew"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ctn_cast"
+                    android:layout_height="250dp">
+                    <TextView
+                        android:id="@+id/crew"
+                        android:layout_marginHorizontal="10dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:text="Cast :"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcv_crew"
+                        android:paddingStart="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/crew"
+                        app:layout_constraintStart_toEndOf="@+id/crew"
+                        android:layout_width="0dp"
+                        tools:listitem="@layout/item_crew"
+                        android:layout_height="0dp"
+                        tools:ignore="RtlSymmetry" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

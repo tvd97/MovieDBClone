@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="c"
+            type="com.example.movie.model.casts.Cast" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingVertical="5dp"
+        android:background="@drawable/rectangle_drawable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            url_mini="@{c.profilePath}"/>
+        <TextView
+            android:paddingLeft="10dp"
+            android:id="@+id/title_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:text="Name: "/>
+        <TextView
+            android:paddingLeft="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/title_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{c.name}"/>
+        <TextView
+            android:paddingLeft="10dp"
+            android:id="@+id/title_department"
+            app:layout_constraintTop_toBottomOf="@+id/title_name"
+            app:layout_constraintStart_toEndOf="@+id/img"
+            app:layout_constraintBottom_toTopOf="@+id/title_job"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:text="Department: "/>
+        <TextView
+            android:paddingLeft="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/title_name"
+            app:layout_constraintStart_toEndOf="@+id/title_department"
+            app:layout_constraintBottom_toTopOf="@+id/title_job"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{c.knownForDepartment}"/>
+        <TextView
+            android:paddingLeft="10dp"
+            android:id="@+id/title_job"
+            app:layout_constraintTop_toBottomOf="@+id/title_department"
+            app:layout_constraintStart_toEndOf="@+id/img"
+            android:layout_width="95dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"
+            android:text="Character: "/>
+        <TextView
+            android:paddingLeft="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/title_department"
+            app:layout_constraintStart_toEndOf="@+id/title_job"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{c.character}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
