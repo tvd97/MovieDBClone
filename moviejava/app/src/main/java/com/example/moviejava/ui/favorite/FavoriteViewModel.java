@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.moviejava.data.local.dao.AppDao;
 import com.example.moviejava.data.local.entities.MovieEntity;
+import com.example.moviejava.ui.base.BaseViewModel;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +18,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @HiltViewModel
-public class FavoriteViewModel extends ViewModel {
+public class FavoriteViewModel extends BaseViewModel {
     private AppDao dao;
 
     @Inject

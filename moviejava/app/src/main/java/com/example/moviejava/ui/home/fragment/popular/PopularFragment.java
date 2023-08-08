@@ -1,19 +1,18 @@
 package com.example.moviejava.ui.home.fragment.popular;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviejava.databinding.FragmentPopularBinding;
+import com.example.moviejava.ui.base.BaseFragment;
 import com.example.moviejava.ui.film.FilmActivity;
 import com.example.moviejava.ui.home.HomeViewModel;
 import com.example.moviejava.ui.home.adapter.MovieAdapter;
@@ -23,38 +22,44 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class PopularFragment extends Fragment {
-    private FragmentPopularBinding binding;
+public class PopularFragment extends BaseFragment<FragmentPopularBinding> {
     private HomeViewModel viewModel;
 
     @Inject
     MovieAdapter viewAdapter;
     private int page = 1;
 
-    @Nullable
+    public PopularFragment(@LayoutRes int contentLayoutId) {
+        super(contentLayoutId);
+    }
+
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentPopularBinding.inflate(inflater, container, false);
+    protected FragmentPopularBinding onHandleViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentPopularBinding.inflate(inflater, container, false);
+    }
 
+    @Override
+    protected void onHandleObject(FragmentPopularBinding rootView) {
         viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-        binding.rcvPopular.setAdapter(viewAdapter);
-        binding.rcvPopular.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        binding().rcvPopular.setAdapter(viewAdapter);
+        binding().rcvPopular.setLayoutManager(new GridLayoutManager(getContext(), 4));
+    }
 
+    @Override
+    protected void onHandleEvents() {
         dataOnChange();
         setEvent();
-        return binding.getRoot();
     }
 
     private void dataOnChange() {
-        viewModel.popular.observe(getViewLifecycleOwner(), it -> viewAdapter.submitData(it));
-        viewModel.isLoading.observe(getViewLifecycleOwner(), it -> {
-            if (it) {
-                binding.loading.setVisibility(View.VISIBLE);
-            } else {
-                binding.loading.setVisibility(View.GONE);
-                binding.rcvPopular.setVisibility(View.VISIBLE);
-            }
-        });
+        defaultObserve(viewModel.popular, null, ()->{
+            binding().loading.setVisibility(View.GONE);
+            binding().rcvPopular.setVisibility(View.VISIBLE);
+        }, isLoading -> {
+            if (isLoading)
+                binding().loading.setVisibility(View.VISIBLE);
+        }, it -> viewAdapter.submitData(it));
     }
 
     private void setEvent() {
@@ -63,7 +68,7 @@ public class PopularFragment extends Fragment {
             intent.putExtra("film_id", results.id);
             startActivity(intent);
         };
-        binding.rcvPopular.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding().rcvPopular.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);

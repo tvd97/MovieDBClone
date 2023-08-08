@@ -1,20 +1,18 @@
 package com.example.moviejava.ui.home;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.moviejava.R;
 import com.example.moviejava.databinding.ActivityHomeBinding;
+import com.example.moviejava.ui.base.BaseActivity;
 import com.example.moviejava.ui.favorite.FavoriteActivity;
 import com.example.moviejava.ui.home.adapter.MovieAdapter;
 import com.example.moviejava.ui.home.adapter.PagerAdapter;
@@ -27,8 +25,8 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class HomeActivity extends AppCompatActivity {
-    private ActivityHomeBinding binding;
+public class HomeActivity extends BaseActivity<ActivityHomeBinding> {
+
     @Inject
     PagerAdapter pagerAdapter;
     @Inject
@@ -37,16 +35,18 @@ public class HomeActivity extends AppCompatActivity {
     private HomeViewModel viewModel;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        binding = ActivityHomeBinding.inflate(getLayoutInflater());
-        super.onCreate(savedInstanceState);
-        setSupportActionBar(binding.toolbar);
+    protected ActivityHomeBinding getLayoutBinding() {
+        return ActivityHomeBinding.inflate(getLayoutInflater());
+    }
+
+    @Override
+    protected void onHandleObject() {
+        setSupportActionBar(binding().toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        binding.pageView.setAdapter(pagerAdapter);
+        binding().pageView.setAdapter(pagerAdapter);
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        dataOnChange();
-        new TabLayoutMediator(binding.tabLayout, binding.pageView, (tab, position) -> {
+        new TabLayoutMediator(binding().tabLayout, binding().pageView, (tab, position) -> {
             switch (position) {
                 case 0:
                     tab.setText("Popular");
@@ -65,7 +65,13 @@ public class HomeActivity extends AppCompatActivity {
                     break;
             }
         }).attach();
-        setContentView(binding.getRoot());
+    }
+
+    @Override
+    protected void onHandleEvent() {
+        defaultObserver(viewModel.search,null,null,null,it->movieAdapter.submitData(it));
+        binding().rcvSearch.setAdapter(movieAdapter);
+        binding().rcvSearch.setLayoutManager(new GridLayoutManager(this, 4));
     }
 
     @Override
@@ -81,15 +87,15 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                binding.ctnSearch.setVisibility(View.VISIBLE);
-                binding.ctnTab.setVisibility(View.GONE);
+                binding().ctnSearch.setVisibility(View.VISIBLE);
+                binding().ctnTab.setVisibility(View.GONE);
                 viewModel.searchMovie(s, 1, false);
                 return false;
             }
         });
         searchView.setOnCloseListener(() -> {
-            binding.ctnSearch.setVisibility(View.GONE);
-            binding.ctnTab.setVisibility(View.VISIBLE);
+            binding().ctnSearch.setVisibility(View.GONE);
+            binding().ctnTab.setVisibility(View.VISIBLE);
             return false;
         });
         return super.onCreateOptionsMenu(menu);
@@ -107,9 +113,4 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void dataOnChange() {
-        viewModel.search.observe(this, it -> movieAdapter.submitData(it));
-        binding.rcvSearch.setAdapter(movieAdapter);
-        binding.rcvSearch.setLayoutManager(new GridLayoutManager(this, 4));
-    }
 }

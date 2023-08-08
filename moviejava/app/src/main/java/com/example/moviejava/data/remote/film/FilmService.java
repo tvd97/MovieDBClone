@@ -11,13 +11,13 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface FilmService {
-    @GET("movie/{id}?api_key=" + Constant.KEY + "&language=en-US")
+    @GET("movie/{id}")
     Observable<Film> getFilm(@Path("id") int id);
 
-    @GET("movie/{id}/videos?api_key=" + Constant.KEY + "&language=en-US")
+    @GET("movie/{id}/videos")
     Observable<Video> getVideo(@Path("id") int id);
 
-    @GET("movie/{id}/casts?api_key=" + Constant.KEY + "&language=en-US")
+    @GET("movie/{id}/casts")
     Observable<CastsFilm> getCastFilm(@Path("id") int id);
 
 }

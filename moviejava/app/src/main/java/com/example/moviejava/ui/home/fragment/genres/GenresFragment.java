@@ -1,20 +1,19 @@
 package com.example.moviejava.ui.home.fragment.genres;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviejava.databinding.FragmentGenresBinding;
+import com.example.moviejava.ui.base.BaseFragment;
 import com.example.moviejava.ui.film.FilmActivity;
 import com.example.moviejava.ui.home.adapter.MovieAdapter;
 
@@ -24,9 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 
 @AndroidEntryPoint
-public class GenresFragment extends Fragment {
+public class GenresFragment extends BaseFragment<FragmentGenresBinding> {
     private GenresViewModel viewModel;
-    private FragmentGenresBinding binding;
 
     @Inject
     GenresAdapter genresAdapter;
@@ -36,25 +34,37 @@ public class GenresFragment extends Fragment {
     private int genreId = 0;
     private int page = 1;
 
-    @Nullable
+
+
+    public GenresFragment(@LayoutRes int contentLayoutId) {
+        super(contentLayoutId);
+    }
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentGenresBinding.inflate(inflater, container, false);
+    protected FragmentGenresBinding onHandleViewBinding(LayoutInflater inflater, ViewGroup container) {
+        return FragmentGenresBinding.inflate(inflater,container,false);
+    }
+
+    @Override
+    protected void onHandleObject(FragmentGenresBinding rootView) {
         viewModel = new ViewModelProvider(this).get(GenresViewModel.class);
         dataOnChange();
         setViewItem();
-        setEventAdapter();
+    }
 
-        return binding.getRoot();
+    @Override
+    protected void onHandleEvents() {
+        setEventAdapter();
     }
 
     private void dataOnChange() {
-        viewModel.getGenres().observe(getViewLifecycleOwner(), list -> genresAdapter.submitData(list));
-        viewModel.getResults().observe(getViewLifecycleOwner(), list -> filmAdapter.submitData(list));
-        viewModel.getChose().observe(getViewLifecycleOwner(), it -> {
+        defaultObserve(viewModel.getGenres(),null,null, null,result->genresAdapter.submitData(result));
+        defaultObserve(viewModel.getResults(),null,null,null,result->filmAdapter.submitData(result));
+        defaultObserve(viewModel.getChose(),null,null,null,
+        it -> {
             if (it) {
-                binding.loading.setVisibility(View.GONE);
-                binding.rcvListFilm.setVisibility(View.VISIBLE);
+                binding().loading.setVisibility(View.GONE);
+                binding().rcvListFilm.setVisibility(View.VISIBLE);
             }
 
         });
@@ -62,20 +72,20 @@ public class GenresFragment extends Fragment {
     }
 
     private void setViewItem() {
-        binding.rcvGenres.setAdapter(genresAdapter);
-        binding.rcvGenres.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        binding().rcvGenres.setAdapter(genresAdapter);
+        binding().rcvGenres.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        binding.rcvListFilm.setAdapter(filmAdapter);
-        binding.rcvListFilm.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        binding().rcvListFilm.setAdapter(filmAdapter);
+        binding().rcvListFilm.setLayoutManager(new GridLayoutManager(getContext(), 4));
         //load more item in last item recyclerview
-        binding.rcvListFilm.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding().rcvListFilm.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
 
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager!=null&&layoutManager.findLastCompletelyVisibleItemPosition() == binding.rcvListFilm.getAdapter().getItemCount() - 1) {
+                if (layoutManager!=null&&layoutManager.findLastCompletelyVisibleItemPosition() == binding().rcvListFilm.getAdapter().getItemCount() - 1) {
                     page++;
                     viewModel.setResults(genreId, page);
                 }

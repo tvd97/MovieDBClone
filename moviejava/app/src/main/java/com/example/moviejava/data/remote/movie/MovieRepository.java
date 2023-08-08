@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
 @Singleton
@@ -22,22 +21,22 @@ public class MovieRepository {
     private MovieService rf;
 
     public Observable<JsonObject> getTopRate(int page) {
-        return rf.getTopRate(page).subscribeOn(Schedulers.io());
+        return rf.getTopRate(page);
     }
 
     public Observable<UpComing> getUpcoming(int page) {
-        return rf.getUpcoming(page).subscribeOn(Schedulers.io());
+        return rf.getUpcoming(page);
     }
 
     public Observable<JsonObject> getPopular(int page) {
-        return rf.getPopular(page).subscribeOn(Schedulers.io());
+        return rf.getPopular(page);
     }
 
     public Observable<UpComing> getNowPlaying(int page) {
-        return rf.getNowPlaying(page).subscribeOn(Schedulers.io());
+        return rf.getNowPlaying(page);
     }
 
     public Observable<JsonObject> searchMovie(String query, int page) {
-        return rf.searchMovie(query, page).subscribeOn(Schedulers.io());
+        return rf.searchMovie(query, page);
     }
 }

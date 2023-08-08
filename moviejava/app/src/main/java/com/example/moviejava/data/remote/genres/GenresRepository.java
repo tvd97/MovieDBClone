@@ -9,9 +9,7 @@ import com.example.moviejava.model.genres.FromJson;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
 @Singleton
@@ -27,12 +25,12 @@ public class GenresRepository {
 
     public Observable<FromJson> getGenres() {
 
-        return rf.getListGenres().subscribeOn(Schedulers.io());
+        return rf.getListGenres();
     }
 
     public Observable<JsonObject> getListGenresByFilm(int id, int page) {
 
-        return rf.getListFilmByGenres(id, page).subscribeOn(Schedulers.io());
+        return rf.getListFilmByGenres(id, page);
     }
 
 }

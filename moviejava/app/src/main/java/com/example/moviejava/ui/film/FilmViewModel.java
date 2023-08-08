@@ -1,32 +1,28 @@
 package com.example.moviejava.ui.film;
 
-import android.util.Log;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.moviejava.data.local.dao.AppDao;
 import com.example.moviejava.data.local.entities.MovieEntity;
 import com.example.moviejava.data.remote.film.FilmRepository;
+import com.example.moviejava.model.State;
 import com.example.moviejava.model.casts.CastsFilm;
 import com.example.moviejava.model.film.Film;
 import com.example.moviejava.model.film.video.Video;
-
-import java.util.Observable;
-
-import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import com.example.moviejava.ui.base.BaseViewModel;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 @HiltViewModel
-public class FilmViewModel extends ViewModel {
+public class FilmViewModel extends BaseViewModel {
     private FilmRepository repository;
     private AppDao dao;
 
@@ -37,82 +33,94 @@ public class FilmViewModel extends ViewModel {
 
     }
 
-    private MutableLiveData<Film> _film = new MutableLiveData<>();
-    public LiveData<Film> film = _film;
+    private final MutableLiveData<State<Film>> _film = new MutableLiveData<>();
+    public LiveData<State<Film>> film = _film;
 
-    private MutableLiveData<Video> _video = new MutableLiveData<>();
-    public LiveData<Video> video = _video;
+    private final MutableLiveData<State<Video>> _video = new MutableLiveData<>();
+    public LiveData<State<Video>> video = _video;
 
-    private MutableLiveData<CastsFilm> _cast = new MutableLiveData<>();
-    public LiveData<CastsFilm> cast = _cast;
+    private final MutableLiveData<State<CastsFilm>> _cast = new MutableLiveData<>();
+    public LiveData<State<CastsFilm>> cast = _cast;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void loadData(int id) {
-        repository.getFilm(id).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Film>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Film film) {
-                        _film.setValue(film);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d("complete", "not error");
-                    }
-                });
-        repository.getVideo(id).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Video>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Video video) {
-                        _video.setValue(video);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d("complete", "not error");
-                    }
-                });
-        repository.getCast(id).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<CastsFilm>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(@NonNull CastsFilm castsFilm) {
-                        _cast.setValue(castsFilm);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d("complete", "not error");
-                    }
-                });
+        launchRxSingle(repository.getFilm(id),
+                result -> _film.postValue(State.success(result)),
+                null);
+        launchRxSingle(
+             repository.getVideo(id),
+                result -> _video.postValue(State.success(result)),
+                null);
+        launchRxSingle(
+               repository.getCast(id),
+                result -> _cast.postValue(State.success(result)),
+                null);
+//        repository.getFilm(id).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<Film>() {
+//                    @Override
+//                    public void onSubscribe(@NonNull Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(@NonNull Film film) {
+//                        _film.setValue(film);
+//                    }
+//
+//                    @Override
+//                    public void onError(@NonNull Throwable e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Log.d("complete", "not error");
+//                    }
+//                });
+//        repository.getVideo(id).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<Video>() {
+//                    @Override
+//                    public void onSubscribe(@NonNull Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(@NonNull Video video) {
+//                        _video.setValue(video);
+//                    }
+//
+//                    @Override
+//                    public void onError(@NonNull Throwable e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Log.d("complete", "not error");
+//                    }
+//                });
+//        repository.getCast(id).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<CastsFilm>() {
+//                    @Override
+//                    public void onSubscribe(@NonNull Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(@NonNull CastsFilm castsFilm) {
+//                        _cast.setValue(castsFilm);
+//                    }
+//
+//                    @Override
+//                    public void onError(@NonNull Throwable e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Log.d("complete", "not error");
+//                    }
+//                });
     }
 
     public void addToDb(Film f) {
