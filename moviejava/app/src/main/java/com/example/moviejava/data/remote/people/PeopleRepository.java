@@ -13,19 +13,19 @@ import retrofit2.Retrofit;
 
 @Singleton
 public class PeopleRepository {
-    private PeopleService rf;
+    private PeopleService service;
 
     @Inject
     public PeopleRepository(Retrofit retrofit) {
-        rf = retrofit.create(PeopleService.class);
+        service = retrofit.create(PeopleService.class);
     }
 
     public @NonNull Observable<Person> getPerson(int id) {
-        return rf.getPerson(id);
+        return service.getPerson(id);
     }
 
     public @NonNull Observable<JsonObject> getMovieByPerson(int id) {
-        return rf.getMovieByPerson(id);
+        return service.getMovieByPerson(id);
 
     }
 }

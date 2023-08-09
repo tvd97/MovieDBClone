@@ -29,9 +29,9 @@ public class PopularFragment extends BaseFragment<FragmentPopularBinding> {
     MovieAdapter viewAdapter;
     private int page = 1;
 
-    public PopularFragment(@LayoutRes int contentLayoutId) {
-        super(contentLayoutId);
-    }
+//    public PopularFragment(@LayoutRes int contentLayoutId) {
+//        super(contentLayoutId);
+//    }
 
 
     @Override

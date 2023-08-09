@@ -23,9 +23,9 @@ public abstract class BaseFragment<V extends ViewBinding> extends Fragment {
     }
     private boolean isCreated = true;
 
-    public BaseFragment(@LayoutRes int contentLayoutId) {
-        super(contentLayoutId);
-    }
+   // public BaseFragment(@LayoutRes int contentLayoutId) {
+//        super(contentLayoutId);
+//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

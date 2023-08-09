@@ -33,9 +33,9 @@ public class NowPlayingFragment extends BaseFragment<FragmentNowPlayingBinding> 
     MovieAdapter viewAdapter;
     private int page = 1;
 
-    public NowPlayingFragment(@LayoutRes int contentLayoutId) {
-        super(contentLayoutId);
-    }
+//    public NowPlayingFragment(@LayoutRes int contentLayoutId) {
+//        super(contentLayoutId);
+//    }
 
     @Override
     protected FragmentNowPlayingBinding onHandleViewBinding(LayoutInflater inflater, ViewGroup container) {

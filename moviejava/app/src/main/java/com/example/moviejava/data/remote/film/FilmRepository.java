@@ -15,21 +15,21 @@ import retrofit2.Retrofit;
 public class FilmRepository {
     @Inject
     public FilmRepository(Retrofit retrofit) {
-        this.rf = retrofit.create(FilmService.class);
+        this.service = retrofit.create(FilmService.class);
     }
 
-    private FilmService rf;
+    private FilmService service;
 
     public Observable<Film> getFilm(int id) {
-        return rf.getFilm(id);
+        return service.getFilm(id);
     }
 
     public Observable<Video> getVideo(int id) {
-        return rf.getVideo(id);
+        return service.getVideo(id);
     }
 
     public Observable<CastsFilm>getCast(int id) {
-        return rf.getCastFilm(id);
+        return service.getCastFilm(id);
     }
 //    public Film getFilm(int id) {
 //        return rf.getFilm(id).subscribeOn(Schedulers.io());

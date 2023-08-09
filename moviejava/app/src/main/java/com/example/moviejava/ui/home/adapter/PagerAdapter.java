@@ -27,15 +27,15 @@ public class PagerAdapter extends
     public Fragment createFragment(int position) {
         switch (position) {
             case 1:
-                return new NowPlayingFragment(R.layout.fragment_now_playing);
+                return new NowPlayingFragment();
             case 2:
-                return new UpcomingFragment(R.layout.fragment_upcoming);
+                return new UpcomingFragment();
             case 3:
-                return new TopRateFragment(R.layout.fragment_top_rate);
+                return new TopRateFragment();
             case 4:
-                return new GenresFragment(R.layout.fragment_genres);
+                return new GenresFragment();
             default:
-                return new PopularFragment(R.layout.fragment_popular);
+                return new PopularFragment();
         }
     }
 

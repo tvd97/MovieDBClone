@@ -17,7 +17,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import kotlin.jvm.JvmOverloads;
 
-public class CustomTextView extends AppCompatTextView {
+public class ReadMoreTextView extends AppCompatTextView {
     private int showingLine = 4;
 
     private String showMore = "read more";
@@ -33,17 +33,17 @@ public class CustomTextView extends AppCompatTextView {
     private boolean isCollapse = true;
 
     @JvmOverloads
-    public CustomTextView(@NonNull Context context) {
+    public ReadMoreTextView(@NonNull Context context) {
         super(context);
         init();
     }
     @JvmOverloads
-    public CustomTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ReadMoreTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
     @JvmOverloads
-    public CustomTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ReadMoreTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -86,7 +86,7 @@ public class CustomTextView extends AppCompatTextView {
         int specialSpace = 0;
         String newText;
         do {
-            newText = show.substring(0, show.length() - 1);
+            newText = show.substring(0, show.length() - specialSpace);
             newText += (threeDot + showMore.toLowerCase());
             setText(newText);
             specialSpace++;

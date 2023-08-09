@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviejava.databinding.ItemFilmBackdropBinding;
 import com.example.moviejava.extentions.OnClickItem;
+import com.example.moviejava.extentions.ViewDiffUtil;
 import com.example.moviejava.model.Results;
 
 import java.util.ArrayList;
@@ -26,9 +28,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     @SuppressLint("NotifyDataSetChanged")
     public void submitData(List<Results> data) {
+        ViewDiffUtil viewUtil= new ViewDiffUtil(list,data);
+        DiffUtil.DiffResult  diffResult= DiffUtil.calculateDiff(viewUtil);
         list.clear();
         list.addAll(data);
-        notifyDataSetChanged();
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull

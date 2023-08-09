@@ -34,13 +34,21 @@ public abstract class BaseActivity<V extends ViewBinding> extends AppCompatActiv
 
     protected abstract void onHandleEvent();
 
-    protected <T> void defaultObserver(LiveData<State<T>> liveData, OnErrorListener onErrorListener, OnFinishListener onFinishListener, OnLoadingListener onLoadingListener, OnSuccessListener<T> onSuccessListener) {
+    protected <T> void defaultObserver(LiveData<State<T>> liveData, 
+                                       @Nullable OnErrorListener onErrorListener, 
+                                       @Nullable OnFinishListener onFinishListener, 
+                                       @Nullable OnLoadingListener onLoadingListener, 
+                                       OnSuccessListener<T> onSuccessListener) {
         liveData.observe(this, state -> {
             if (state.isLoading()) {
-                onLoadingListener.onLoading(true);
+                if (onLoadingListener != null) {
+                    onLoadingListener.onLoading(true);
+                }
             }
             if (state.isError()) {
-                onLoadingListener.onLoading(false);
+                if (onLoadingListener != null) {
+                    onLoadingListener.onLoading(false);
+                }
                 // handle error base
 //                if (state.getThrowable() instanceof HttpError) {
 //                    handleHttpError((HttpError) state.getThrowable());
@@ -54,7 +62,9 @@ public abstract class BaseActivity<V extends ViewBinding> extends AppCompatActiv
                 }
             }
             if (state.isSuccess()) {
-                onLoadingListener.onLoading(false);
+                if (onLoadingListener != null) {
+                    onLoadingListener.onLoading(false);
+                }
                 onSuccessListener.onSuccess(state.getData());
                 if (onFinishListener != null) {
                     onFinishListener.onFinish();

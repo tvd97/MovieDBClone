@@ -36,9 +36,9 @@ public class GenresFragment extends BaseFragment<FragmentGenresBinding> {
 
 
 
-    public GenresFragment(@LayoutRes int contentLayoutId) {
-        super(contentLayoutId);
-    }
+//    public GenresFragment(@LayoutRes int contentLayoutId) {
+//        super(contentLayoutId);
+//    }
 
     @Override
     protected FragmentGenresBinding onHandleViewBinding(LayoutInflater inflater, ViewGroup container) {

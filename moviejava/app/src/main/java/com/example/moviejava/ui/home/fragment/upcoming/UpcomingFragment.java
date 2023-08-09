@@ -31,9 +31,9 @@ public class UpcomingFragment extends BaseFragment<FragmentUpcomingBinding> {
     MovieAdapter viewAdapter;
     private int page = 1;
 
-    public UpcomingFragment(@LayoutRes int contentLayoutId) {
-        super(contentLayoutId);
-    }
+//    public UpcomingFragment(@LayoutRes int contentLayoutId) {
+//        super(contentLayoutId);
+//    }
 
 
     @Override

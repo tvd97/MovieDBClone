@@ -31,9 +31,9 @@ public class TopRateFragment extends BaseFragment<FragmentTopRateBinding> {
     MovieAdapter viewAdapter;
     private int page = 1;
 
-    public TopRateFragment(@LayoutRes int contentLayoutId) {
-        super(contentLayoutId);
-    }
+//    public TopRateFragment(@LayoutRes int contentLayoutId) {
+//        super(contentLayoutId);
+//    }
 
     @Override
     protected FragmentTopRateBinding onHandleViewBinding(LayoutInflater inflater, ViewGroup container) {

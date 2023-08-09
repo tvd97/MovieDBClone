@@ -15,22 +15,22 @@ import retrofit2.Retrofit;
 @Singleton
 public class GenresRepository {
     @NonNull
-    private final GenresService rf;
+    private final GenresService service;
 
     @Inject
     public GenresRepository(@NonNull Retrofit retrofit) {
-       this.rf = retrofit.create(GenresService.class);
+       this.service = retrofit.create(GenresService.class);
     }
 
 
     public Observable<FromJson> getGenres() {
 
-        return rf.getListGenres();
+        return service.getListGenres();
     }
 
     public Observable<JsonObject> getListGenresByFilm(int id, int page) {
 
-        return rf.getListFilmByGenres(id, page);
+        return service.getListFilmByGenres(id, page);
     }
 
 }

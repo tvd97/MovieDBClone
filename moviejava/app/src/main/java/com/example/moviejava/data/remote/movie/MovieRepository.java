@@ -14,29 +14,29 @@ import retrofit2.Retrofit;
 public class MovieRepository {
     @Inject
     public MovieRepository(Retrofit retrofit) {
-        this.rf = retrofit.create(MovieService.class);
+        this.service = retrofit.create(MovieService.class);
     }
 
 
-    private MovieService rf;
+    private MovieService service;
 
     public Observable<JsonObject> getTopRate(int page) {
-        return rf.getTopRate(page);
+        return service.getTopRate(page);
     }
 
     public Observable<UpComing> getUpcoming(int page) {
-        return rf.getUpcoming(page);
+        return service.getUpcoming(page);
     }
 
     public Observable<JsonObject> getPopular(int page) {
-        return rf.getPopular(page);
+        return service.getPopular(page);
     }
 
     public Observable<UpComing> getNowPlaying(int page) {
-        return rf.getNowPlaying(page);
+        return service.getNowPlaying(page);
     }
 
     public Observable<JsonObject> searchMovie(String query, int page) {
-        return rf.searchMovie(query, page);
+        return service.searchMovie(query, page);
     }
 }

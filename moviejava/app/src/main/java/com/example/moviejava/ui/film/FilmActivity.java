@@ -2,14 +2,12 @@ package com.example.moviejava.ui.film;
 
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -43,7 +41,7 @@ public class FilmActivity extends BaseActivity<ActivityFilmBinding> {
     private Film f;
     String key = "";
 
-//    @RequiresApi(api = Build.VERSION_CODES.N)
+
 //    @Override
 //    protected void onCreate(@Nullable Bundle savedInstanceState) {
 //        binding = ActivityFilmBinding.inflate(getLayoutInflater());
@@ -72,7 +70,6 @@ public class FilmActivity extends BaseActivity<ActivityFilmBinding> {
         return ActivityFilmBinding.inflate(getLayoutInflater());
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onHandleObject() {
         viewModel = new ViewModelProvider(this).get(FilmViewModel.class);
