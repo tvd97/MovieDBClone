@@ -7,28 +7,28 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 class MovieRepository @Inject constructor(retrofit: Retrofit) {
-    private val rf = retrofit.create(MovieService::class.java)
+    private val service = retrofit.create(MovieService::class.java)
     fun getUpcoming(page: Int) = flow {
         emit(
-            rf.getUpcoming(page = page)
+            service.getUpcoming(page = page)
         )
     }.flowOn(Dispatchers.IO)
 
     fun getTopRate(page: Int) = flow {
         emit(
-            rf.getTopRate(page = page)
+            service.getTopRate(page = page)
         )
     }.flowOn(Dispatchers.IO)
 
     fun getNowPlaying(page: Int) = flow {
-        emit(rf.getNowPlaying(page = page))
+        emit(service.getNowPlaying(page = page))
     }.flowOn(Dispatchers.IO)
 
     fun getPopular(page: Int) = flow {
-        emit(rf.getPopular(page = page))
+        emit(service.getPopular(page = page))
     }.flowOn(Dispatchers.IO)
 
     fun searchMovie(query: String, page: Int) = flow {
-        emit(rf.searchMovie(query = query, page = page))
+        emit(service.searchMovie(query = query, page = page))
     }.flowOn(Dispatchers.IO)
 }

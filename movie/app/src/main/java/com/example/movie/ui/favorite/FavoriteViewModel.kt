@@ -1,10 +1,12 @@
 package com.example.movie.ui.favorite
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movie.data.local.dao.AppDao
 import com.example.movie.data.local.entities.MovieEntity
+import com.example.movie.model.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,8 +18,7 @@ class FavoriteViewModel @Inject constructor(private val dao: AppDao) : ViewModel
     val movies: LiveData<List<MovieEntity>>
         get() = dao.selectRecord()
 
-    fun  deleteRecord(m:MovieEntity)
-    {
+    fun deleteRecord(m: MovieEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             dao.deleteRecord(m)
         }

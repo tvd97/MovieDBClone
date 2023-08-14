@@ -8,20 +8,20 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 class FilmRepository @Inject constructor(val retrofit: Retrofit) {
-    private val rf = retrofit.create(FilmService::class.java)
+    private val service = retrofit.create(FilmService::class.java)
     fun getFilm(id: Int) = flow {
         emit(
-            rf.getFilm(id = id)
+            service.getFilm(id = id)
         )
     }.flowOn(Dispatchers.IO)
 
     fun getVideo(id: Int) = flow {
         emit(
-            rf.getVideo(id = id)
+            service.getVideo(id = id)
         )
     }.flowOn(Dispatchers.IO)
 
     fun getCastFilm(id: Int) = flow {
-        emit(rf.getCastFilm(id = id))
+        emit(service.getCastFilm(id = id))
     }.flowOn(Dispatchers.IO)
 }

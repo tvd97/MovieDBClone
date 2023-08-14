@@ -3,43 +3,38 @@ package com.example.movie.ui.home
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.movie.data.remote.movie.MovieRepository
 import com.example.movie.model.Results
+import com.example.movie.model.State
+import com.example.movie.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: MovieRepository) : ViewModel() {
-    val isLoading = MutableLiveData(true)
+class HomeViewModel @Inject constructor(private val repository: MovieRepository) : BaseViewModel() {
 
     private var listUpcoming = mutableListOf<Results>()
-    private val _upcoming = MutableLiveData<List<Results>>()
-    val upcoming: LiveData<List<Results>>
+    private val _upcoming = MutableLiveData<State<List<Results>>>()
+    val upcoming: LiveData<State<List<Results>>>
         get() = _upcoming
 
     private var listTopRate = mutableListOf<Results>()
-    private val _topRate = MutableLiveData<List<Results>>()
-    val topRate: LiveData<List<Results>>
+    private val _topRate = MutableLiveData<State<List<Results>>>()
+    val topRate: LiveData<State<List<Results>>>
         get() = _topRate
 
     private var listPopular = mutableListOf<Results>()
-    private val _popular = MutableLiveData<List<Results>>()
-    val popular: LiveData<List<Results>>
+    private val _popular = MutableLiveData<State<List<Results>>>()
+    val popular: LiveData<State<List<Results>>>
         get() = _popular
 
     private var listNowPlaying = mutableListOf<Results>()
-    private val _nowPlaying = MutableLiveData<List<Results>>()
-    val nowPlaying: LiveData<List<Results>>
+    private val _nowPlaying = MutableLiveData<State<List<Results>>>()
+    val nowPlaying: LiveData<State<List<Results>>>
         get() = _nowPlaying
     private var listSearch = mutableListOf<Results>()
-    private val _search = MutableLiveData<List<Results>>()
-    val search: LiveData<List<Results>>
+    private val _search = MutableLiveData<State<List<Results>>>()
+    val search: LiveData<State<List<Results>>>
         get() = _search
 
     init {
@@ -51,78 +46,58 @@ class HomeViewModel @Inject constructor(private val repository: MovieRepository)
     }
 
     fun getUpComing(page: Int) {
-        viewModelScope.launch {
-            repository.getUpcoming(page = page)
-                .catch { e ->
-                    Log.e("err", e.message.toString())
-                }
-                .collect { data ->
-                    listUpcoming.addAll(data.results)
-                    _upcoming.value = listUpcoming
-                    isLoading.value = false
-                }
-        }
+        _upcoming.postValue(State.loading())
+        launchViewModel(repository.getUpcoming(page = page), {
+            listUpcoming.addAll(it.results)
+            _upcoming.postValue(State.success(listUpcoming))
+        }, {
+            Log.e("err", it.message.toString())
+        })
     }
 
     fun getTopRate(page: Int) {
-        viewModelScope.launch {
-            repository.getTopRate(page = page)
-                .catch { e ->
-                    Log.e("err", e.message.toString())
-                }
-                .collect { data ->
-                    listTopRate.addAll(data.results)
-                    _topRate.value = listTopRate
-                    isLoading.value = false
-                }
-        }
+        _topRate.postValue(State.loading())
+        launchViewModel(repository.getTopRate(page = page), {
+            listTopRate.addAll(it.results)
+            _topRate.postValue(State.success(listTopRate))
+        }, {
+            Log.e("err", it.message.toString())
+        })
     }
 
     fun getPopular(page: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getPopular(page = page)
-                .catch { e ->
-                    Log.e("err", e.message.toString())
-                }
-                .collect { data ->
-                    withContext(Dispatchers.Main)
-                    {
-                        listPopular.addAll(data.results)
-                        _popular.value = listPopular
-                        isLoading.value = false
-                    }
+        _popular.postValue(State.loading())
+        launchViewModel(repository.getPopular(page = page), {
+            listPopular.addAll(it.results)
+            _popular.postValue(State.success(listPopular))
+        }, {
+            Log.e("err", it.message.toString())
+        })
 
-                }
-        }
+
     }
 
     fun getNowPlaying(page: Int) {
-        viewModelScope.launch {
-            repository.getNowPlaying(page = page)
-                .catch { e ->
-                    Log.e("err", e.message.toString())
-                }
-                .collect { data ->
-                    listNowPlaying.addAll(data.results)
-                    _nowPlaying.value = listNowPlaying
-                    isLoading.value = false
-                }
-        }
+        _nowPlaying.postValue(State.loading())
+        launchViewModel(repository.getNowPlaying(page = page), {
+            listNowPlaying.addAll(it.results)
+            _nowPlaying.postValue(State.success(listNowPlaying))
+        }, {
+            Log.e("err", it.message.toString())
+        })
+
     }
 
     fun searchMovie(query: String, page: Int, more: Boolean) {
-        viewModelScope.launch {
-            repository.searchMovie(query = query, page = page)
-                .catch {
-                    Log.e("err", "err")
-                }
-                .collect { data ->
-                    if (more) listSearch.addAll(data.results)
-                    else listSearch = data.results
 
-                    _search.value = listSearch
-                }
-        }
+        launchViewModel(repository.searchMovie(query = query, page = page), {
+            if (more) listSearch.addAll(it.results)
+            else listSearch = it.results
+            _search.postValue(State.success(listSearch))
+        }, {
+            Log.e("err", it.message.toString())
+        })
+
 
     }
 }

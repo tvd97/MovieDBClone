@@ -1,7 +1,5 @@
 package com.example.movie.ui.home.fragment.genres
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +7,18 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.example.movie.databinding.FragmentGenresBinding
+import com.example.movie.ui.base.BaseFragment
 import com.example.movie.ui.home.adapter.MovieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class GenresFragment : Fragment() {
+class GenresFragment : BaseFragment<FragmentGenresBinding>() {
     private val viewModel: GenresViewModel by viewModels()
-    private lateinit var binding: FragmentGenresBinding
+
 
     @Inject
     lateinit var genresAdapter: GenresAdapter
@@ -27,25 +27,36 @@ class GenresFragment : Fragment() {
     lateinit var filmAdapter: MovieAdapter
     private var genreId = 0
     private var page = 1
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
 
-        binding = FragmentGenresBinding.inflate(inflater, container, false)
+    override fun setViewBinding(
+        inflater: LayoutInflater, container: ViewGroup?
+    ): FragmentGenresBinding = FragmentGenresBinding.inflate(inflater, container, false)
+
+    override fun setupObjects(rootView: ViewBinding?) {
+        binding.rcvGenres.apply {
+            adapter = genresAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+        binding.rcvListFilm.apply {
+            adapter = filmAdapter
+            layoutManager = GridLayoutManager(context, 4)
+        }
         viewModel.apply {
-            listGenres.observe(viewLifecycleOwner)
-            {
-                genresAdapter.submitData(it)
+            defaultObserver(listGenres, null, null) {
+                it?.let { genresAdapter.submitData(it) }
             }
-            results.observe(viewLifecycleOwner)
-            {
-                filmAdapter.submitData(it)
 
+            defaultObserver(results, {
+                binding.loading.visibility = View.GONE
+            }, {
+                binding.loading.visibility = View.VISIBLE
+            }) {
+                it?.let {
+                    filmAdapter.submitData(it)
+                }
             }
-            isChose.observe(viewLifecycleOwner)
-            {
-                if (it == true) {
+            defaultObserver(isChose) {
+                if (it) {
                     binding.apply {
                         loading.visibility = View.GONE
                         rcvListFilm.visibility = View.VISIBLE
@@ -54,20 +65,16 @@ class GenresFragment : Fragment() {
 
             }
         }
+    }
+
+    override fun setupEvents() {
         genresAdapter.onClickItem = {
             genreId = it.id!!
             page = 1
             viewModel.clearData()
             viewModel.getListFilmByGenres(id = it.id!!, page = 1)
         }
-        binding.rcvGenres.apply {
-            adapter = genresAdapter
-            layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        }
         binding.rcvListFilm.apply {
-            adapter = filmAdapter
-            layoutManager = GridLayoutManager(context, 4)
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -83,8 +90,6 @@ class GenresFragment : Fragment() {
                 }
             })
         }
-        return binding.root
     }
-
 
 }

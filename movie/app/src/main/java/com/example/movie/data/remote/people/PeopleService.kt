@@ -9,9 +9,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PeopleService {
-    @GET("person/{person_id}?api_key=${Constant.KEY}&language=en-US")
+    @GET("person/{person_id}")
     suspend fun getPerson(@Path("person_id") id: Int): Person
 
-    @GET("discover/movie?api_key=${Constant.KEY}&language=en-US")
+    @GET("discover/movie")
     suspend fun getMovieByPerson(@Query("with_people") id: Int): JsonObject
 }

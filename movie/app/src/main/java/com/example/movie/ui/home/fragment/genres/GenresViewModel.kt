@@ -3,24 +3,22 @@ package com.example.movie.ui.home.fragment.genres
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.movie.data.remote.genres.GenresRepository
-import com.example.movie.model.Results
 import com.example.movie.model.Genres
+import com.example.movie.model.Results
+import com.example.movie.model.State
+import com.example.movie.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GenresViewModel @Inject constructor(val repository: GenresRepository) : ViewModel() {
-    private val _genres = MutableLiveData<List<Genres>>()
-    val listGenres: LiveData<List<Genres>>
+class GenresViewModel @Inject constructor(val repository: GenresRepository) : BaseViewModel() {
+    private val _genres = MutableLiveData<State<List<Genres>>>()
+    val listGenres: LiveData<State<List<Genres>>>
         get() = _genres
     private val list = mutableListOf<Results>()
-    private val _results = MutableLiveData<List<Results>>()
-    val results: LiveData<List<Results>>
+    private val _results = MutableLiveData<State<List<Results>>>()
+    val results: LiveData<State<List<Results>>>
         get() = _results
     private val _isChose = MutableLiveData(false)
     val isChose: LiveData<Boolean>
@@ -31,30 +29,20 @@ class GenresViewModel @Inject constructor(val repository: GenresRepository) : Vi
     }
 
     init {
-        viewModelScope.launch {
-            repository.getGenres()
-                .catch { e ->
-                    Log.e("err", e.message.toString())
-                }
-                .collect { data ->
-                    _genres.value = data.genres
-                }
-        }
+        launchViewModel(repository.getGenres(), { _genres.postValue(State.success(it.genres)) }, {
+            Log.e("err", it.message.toString())
+        })
 
     }
 
     fun getListFilmByGenres(id: Int, page: Int) {
-        viewModelScope.launch {
-            repository.getListFilmByGenres(id = id, page = page)
-                .catch { e ->
-                    Log.e("err", e.message.toString())
-                }
-                .collect { data ->
-                    list.addAll(data.results)
-                    _results.value = list
-                    _isChose.value = true
-                }
-        }
-
+        _results.postValue(State.loading())
+        launchViewModel(repository.getListFilmByGenres(id = id, page = page), {
+            list.addAll(it.results)
+            _results.postValue(State.success(list))
+            _isChose.value = true
+        }, {
+            Log.e("err", it.message.toString())
+        })
     }
 }

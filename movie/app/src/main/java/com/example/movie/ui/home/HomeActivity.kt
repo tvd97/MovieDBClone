@@ -1,39 +1,39 @@
 package com.example.movie.ui.home
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movie.R
 import com.example.movie.databinding.ActivityHomeBinding
+import com.example.movie.ui.base.BaseActivity
+import com.example.movie.ui.favorite.FavoriteActivity
 import com.example.movie.ui.film.FilmActivity
 import com.example.movie.ui.home.adapter.MovieAdapter
 import com.example.movie.ui.home.adapter.PagerAdapter
-import com.example.movie.ui.favorite.FavoriteActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     @Inject
     lateinit var adapter: PagerAdapter
 
     @Inject
     lateinit var movieAdapter: MovieAdapter
     private val viewModel: HomeViewModel by viewModels()
-    private lateinit var binding: ActivityHomeBinding
     private lateinit var searchView: SearchView
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
+
+    override fun getLayoutBinding(): ActivityHomeBinding =
+        ActivityHomeBinding.inflate(layoutInflater)
+
+    override fun onHandleObject() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.run {
             setDisplayShowTitleEnabled(true)
@@ -45,6 +45,7 @@ class HomeActivity : AppCompatActivity() {
                 0 -> {
                     tab.text = "Popular"
                 }
+
                 1 -> tab.text = "Now playing"
                 2 -> tab.text = "Upcoming"
                 3 -> tab.text = "Top rate"
@@ -52,34 +53,31 @@ class HomeActivity : AppCompatActivity() {
 
             }
         }.attach()
-
-        viewModel.search.observe(this)
-        {
-            movieAdapter.submitData(it)
-        }
         binding.rcvSearch.apply {
             adapter = movieAdapter
             layoutManager = GridLayoutManager(this@HomeActivity, 4)
         }
+    }
 
+    override fun onHandleEvent() {
         movieAdapter.onClickItem = {
             val intent = Intent(this, FilmActivity::class.java)
             intent.putExtra("id", it.id)
             startActivity(intent)
         }
-
-        setContentView(binding.root)
+        defaultObserver(viewModel.search, null, null) {
+            it?.let { movieAdapter.submitData(it) }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
         searchView = menu?.findItem(R.id.app_bar_search)?.actionView as SearchView
-        searchView. apply {
-            this.setOnQueryTextListener(
-                object : OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean = false
+        searchView.apply {
+            this.setOnQueryTextListener(object : OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean = false
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
+                override fun onQueryTextChange(newText: String?): Boolean {
                         binding.ctnSearch.visibility = View.VISIBLE
                         binding.ctnTab.visibility = View.GONE
                         Log.e("text", newText.toString())

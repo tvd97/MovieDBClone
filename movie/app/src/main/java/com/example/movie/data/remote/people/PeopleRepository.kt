@@ -7,12 +7,12 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 class PeopleRepository @Inject constructor(val retrofit: Retrofit) {
-    private val rf = retrofit.create(PeopleService::class.java)
+    private val service = retrofit.create(PeopleService::class.java)
     fun getPerson(id: Int) = flow {
-        emit(rf.getPerson(id))
+        emit(service.getPerson(id))
     }.flowOn(Dispatchers.IO)
 
     fun getMovieByPerson(id: Int) = flow {
-        emit(rf.getMovieByPerson(id))
+        emit(service.getMovieByPerson(id))
     }.flowOn(Dispatchers.IO)
 }

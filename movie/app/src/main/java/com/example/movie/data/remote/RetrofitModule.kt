@@ -9,12 +9,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
+import okhttp3.HttpUrl
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,18 +37,29 @@ object RetrofitModule {
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     @Provides
-     fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
-        OkHttpClient.Builder()
-            .readTimeout(20, TimeUnit.SECONDS)
-            .connectTimeout(2000, TimeUnit.MILLISECONDS)
-            .retryOnConnectionFailure(true)
-            .addInterceptor(httpLoggingInterceptor).build()
+    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor, interceptor: Interceptor): OkHttpClient =
+        OkHttpClient.Builder().readTimeout(20, TimeUnit.SECONDS)
+            .connectTimeout(2000, TimeUnit.MILLISECONDS).retryOnConnectionFailure(true)
+            .addInterceptor(httpLoggingInterceptor).addInterceptor(interceptor).build()
 
     @Provides
-    fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(Constant.URL)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-        .client(okHttpClient)
-        .build()
+    fun provideInterceptor(): Interceptor {
+        return Interceptor { chain: Interceptor.Chain ->
+            val originalRequest: Request = chain.request()
+            val urlBuilder: HttpUrl.Builder =
+                originalRequest.url().newBuilder().addQueryParameter("api_key", Constant.KEY)
+                    .addQueryParameter(
+                        "language", "en-US"
+                    )
+            val modifiedRequest: Request =
+                originalRequest.newBuilder().url(urlBuilder.build()).build()
+            chain.proceed(modifiedRequest)
+        }
+    }
+
+    @Provides
+    fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder().baseUrl(Constant.URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create()).client(okHttpClient).build()
 }

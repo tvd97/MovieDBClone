@@ -7,9 +7,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface GenresService {
-    @GET("genre/movie/list?api_key=${Constant.KEY}&language=en-US")
+    @GET("genre/movie/list")
     suspend fun getListGenres(): FromJson
 
-    @GET("discover/movie?api_key=${Constant.KEY}&language=en-US")
+    @GET("discover/movie")
     suspend fun getListFilmByGenres(@Query("without_genres") id: Int,@Query("page") page:Int): JsonObject
 }

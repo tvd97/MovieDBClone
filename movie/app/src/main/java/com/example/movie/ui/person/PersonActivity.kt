@@ -1,28 +1,30 @@
 package com.example.movie.ui.person
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movie.R
 import com.example.movie.databinding.ActivityPersonBinding
+import com.example.movie.ui.base.BaseActivity
 import com.example.movie.ui.home.adapter.MovieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PersonActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityPersonBinding
+class PersonActivity : BaseActivity<ActivityPersonBinding>() {
+
 
     private val viewModel: PersonViewModel by viewModels()
+
     @Inject
     lateinit var movieAdapter: MovieAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPersonBinding.inflate(layoutInflater)
+
+    override fun getLayoutBinding(): ActivityPersonBinding =
+        ActivityPersonBinding.inflate(layoutInflater)
+
+    override fun onHandleObject() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.run {
             setDisplayShowTitleEnabled(true)
@@ -32,20 +34,9 @@ class PersonActivity : AppCompatActivity() {
         val bundle: Bundle? = intent.extras
         val id = bundle!!.getInt("person_id")
         viewModel.getPerson(id)
-        viewModel.apply {
-            person.observe(this@PersonActivity)
-            {
-                binding.p=it
-                binding.executePendingBindings()
-            }
-            movie.observe(this@PersonActivity)
-            {
-                movieAdapter.submitData(it)
-            }
-        }
         binding.rcvMovie.apply {
             adapter=movieAdapter
-            layoutManager= GridLayoutManager(this@PersonActivity,4)
+            layoutManager = GridLayoutManager(this@PersonActivity, 4)
         }
         binding.showMore.apply {
             setShowingLine(4)
@@ -55,8 +46,22 @@ class PersonActivity : AppCompatActivity() {
             addShowMoreText("read more")
 
         }
-        setContentView(binding.root)
     }
+
+    override fun onHandleEvent() {
+        viewModel.apply {
+            defaultObserver(person, null, null) {
+                binding.p = it
+                binding.executePendingBindings()
+            }
+            defaultObserver(movie, null, null) {
+
+                it?.let { movieAdapter.submitData(it) }
+
+            }
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> true.also { finish() }

@@ -8,40 +8,42 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movie.R
 import com.example.movie.databinding.ActivityFavoriteBinding
+import com.example.movie.ui.base.BaseActivity
 import com.example.movie.ui.film.FilmActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FavoriteActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityFavoriteBinding
+class FavoriteActivity : BaseActivity<ActivityFavoriteBinding>() {
 
     @Inject
     lateinit var favoriteAdapter: FavoriteAdapter
     private val viewModel: FavoriteViewModel by viewModels()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityFavoriteBinding.inflate(layoutInflater)
+
+    override fun getLayoutBinding(): ActivityFavoriteBinding {
+        return ActivityFavoriteBinding.inflate(layoutInflater)
+    }
+
+    override fun onHandleObject() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.run {
             setDisplayShowTitleEnabled(true)
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
         }
-        viewModel.movies.observe(this)
-        {
+
+        defaultObserver(viewModel.movies){
             favoriteAdapter.submitData(it)
         }
+
         binding.rcvFavorite.apply {
             adapter = favoriteAdapter
             layoutManager =
                 LinearLayoutManager(this@FavoriteActivity, LinearLayoutManager.VERTICAL, false)
         }
-        setEvent()
-        setContentView(binding.root)
     }
 
-    private fun setEvent() {
+    override fun onHandleEvent() {
         favoriteAdapter.onClickItem = {
             val intent = Intent(this, FilmActivity::class.java)
             intent.putExtra("id", it.id)
@@ -51,6 +53,7 @@ class FavoriteActivity : AppCompatActivity() {
             viewModel.deleteRecord(it)
         }
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
