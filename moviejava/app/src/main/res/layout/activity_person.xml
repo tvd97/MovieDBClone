@@ -144,28 +144,15 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <ScrollView
+                    <com.example.moviejava.extentions.ReadMoreTextView
+                        android:id="@+id/show_more"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="wrap_content"
+                        android:text="@{p.biography}"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/title_biography">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@{p.biography}"/>
-                    </ScrollView>
-
-<!--                    <com.example.moviejava.extentions.CustomTextView-->
-<!--                        android:id="@+id/show_more"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text=""-->
-<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toBottomOf="@+id/title_biography" />-->
+                        app:layout_constraintTop_toBottomOf="@+id/title_biography" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,5 +1,6 @@
 package com.example.moviejava.ui.person;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -25,13 +26,6 @@ public class PersonActivity extends BaseActivity<ActivityPersonBinding> {
     @Inject
     MovieAdapter movieAdapter;
 
-//
-//        binding.showMore.setShowingLine(4);
-//        binding.showMore.setShowLessTextColor(Color.parseColor("#FF42E2F6"));
-//        binding.showMore.setShowMoreTextColor(Color.parseColor("#FF42E2F6"));
-//        binding.showMore.addShowLessText("hide");
-//        binding.showMore.addShowMoreText("read more");
-
 
     @Override
     protected ActivityPersonBinding getLayoutBinding() {
@@ -48,6 +42,11 @@ public class PersonActivity extends BaseActivity<ActivityPersonBinding> {
         Bundle bundle = getIntent().getExtras();
         int id = bundle.getInt("person_id");
         viewModel.getData(id);
+                binding().showMore.setShowingLine(4);
+        binding().showMore.setShowLessTextColor(Color.parseColor("#FF42E2F6"));
+        binding().showMore.setShowMoreTextColor(Color.parseColor("#FF42E2F6"));
+        binding().showMore.addShowLessText("hide");
+        binding().showMore.addShowMoreText("read more");
     }
 
     @Override

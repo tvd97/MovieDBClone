@@ -31,15 +31,4 @@ public class FilmRepository {
     public Observable<CastsFilm>getCast(int id) {
         return service.getCastFilm(id);
     }
-//    public Film getFilm(int id) {
-//        return rf.getFilm(id).subscribeOn(Schedulers.io());
-//    }
-//    public  Observable<Video> getVideo(int id)
-//    {
-//        return  rf.getVideo(id).subscribeOn(Schedulers.io());
-//    }
-//    public  Observable<CastsFilm> getCast(int id)
-//    {
-//        return  rf.getCastFilm(id).subscribeOn(Schedulers.io());
-//    }
 }
